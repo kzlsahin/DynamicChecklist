@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+  <title>İnşa izin Başvurusu</title>
+  <meta name="author" content="Mustafa ŞENTÜRK 9901 Dnz. Uzm.">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <style>
+    body {
+      margin: 0;
+      color: #000;
+      background-color: #fff;
+      padding: 2em;
+    }
+
+    h1 {
+      text-align: center;
+      color: black;
+    }
+
+    h2 {
+      text-align: center;
+    }
+
+    #selections {
+      column-width: 100%;
+      column-gap: 2em;
+    }
+
+    .select {
+      width: 12em;
+      display: inline-block;
+    }
+
+    #report {
+      padding: 1em;
+      display: block;
+      border: 2px solid black;
+      min-height: 10em;
+    }
+
+
+    #expert-notes {
+      background-color: lightgrey;
+      display: block;
+      min-height: 5em;
+    }
+
+    #expert-notes:hover {
+      cursor: text;
+    }
+
+    input[type=checkbox] {
+      cursor: pointer;
+    }
+
+    .inlineInput {
+      min-width: 3em;
+      display: inline;
+      border: none;
+      text-align: center;
+    }
+
+    .btn-output {
+      width: 14em;
+      height: 3em;
+      border: 2px solid lightskyblue;
+      border-radius: 5px;
+      background-color: rgb(137, 212, 255);
+      cursor: pointer;
+    }
+
+    .btn-print-empty {
+      width: 14em;
+      height: 3em;
+      border: 2px solid rgba(250, 149, 103, 0.692);
+      border-radius: 5px;
+      background-color: rgb(250, 150, 103);
+      cursor: pointer;
+    }
+
+    .btn-output:hover {
+      border: 2px solid lightskyblue;
+      background-color: rgb(171, 245, 250);
+    }
+
+    .btn-print-empty:hover {
+      border: 2px solid lightskyblue;
+      background-color: rgb(255, 182, 148);
+    }
+
+    #absent-papers {
+      min-height: 2em;
+    }
+
+    #absent-papers:hover {
+      cursor: pointer;
+      background-color: beige;
+    }
+
+    .print {
+      display: none;
+    }
+
+    span.print {
+      display: none;
+    }
+
+    .not-print {
+      display: block;
+    }
+
+    span.not-print {
+      display: inline;
+    }
+
+    @page {
+      size: A4;
+      margin: 11mm 17mm 17mm 17mm;
+    }
+
+    @media print {
+      body {
+        font-size: 12pt;
+        margin: 0px;
+      }
+
+      header {
+        position: fixed;
+
+      }
+
+      button {
+        display: none;
+      }
+
+      select {
+        appearance: none;
+        border: none;
+      }
+
+      #chechlist-body {
+        display: none;
+      }
+
+      #report {
+        padding: 1em;
+        page-break-inside: avoid;
+
+
+      }
+
+      .print {
+        display: block;
+      }
+
+      span.print {
+        display: inline;
+      }
+
+      .not-print {
+        display: none;
+      }
+
+      span.not-print {
+        display: none;
+      }
+    }
+  </style>
+</head>
+
+<body onload="initPage()">
+
+  <div class="head-info">
+    <h2>Tuzla Liman Başkanlığı</h2>
+    <h3>Eksik Evrak Tutanağı</h3>
+    <div id="application-info">
+      <p>
+        <span>İlgi başvuru : </span>
+        <span class="print" id="appInfoToPrint"></span>
+        <span class="not-print">
+          <input class="inlineInput" type="text" name="application-date" id="application-date"
+            onChange="updateApplicationInfo()" />
+          <span>tarih ve</span>
+          <input class="inlineInput" type="text" name="application-number" id="application-number"
+            onChange="updateApplicationInfo()" />
+          <span>liman kayıt sayılı inşa izin başvurusu</span>
+        </span>
+      </p>
+    </div>
+    <HR>
+    <div id="selections">
+      <div class="select">
+        <label for="ce-state"> CE Durumunu :</label><br />
+        <select id="ce-state" name="ce-state" onchange="ceUpdated()">
+          <option value="" selected hidden>Seçiniz</option>
+          <option value="ce-true">CE'li üretilecek</option>
+          <option value="ce-false">CE'siz üretilecek</option>
+        </select>
+      </div>
+      <div class="select">
+        <label for="flag"> Bayrak Durumunu :</label><br />
+        <select id="flag" name="flag" onchange="flagUpdated()">
+          <option value="" selected hidden>Seçiniz</option>
+          <option value="flag-foreign">Yabancı Bayraklı</option>
+          <option value="flag-turk">Türk Bayraklı</option>
+        </select>
+      </div>
+      <div class="select">
+        <label for="klas"> Klas Durumunu :</label><br />
+        <select id="klas" name="klas" onchange="updateKlas()">
+          <option value="" selected hidden>Seçiniz</option>
+          <option value="klas-true">Klaslı</option>
+          <option value="klas-false">Klassz</option>
+        </select>
+      </div>
+      <div class="select">
+        <label for="project-origin"> Proje mühendisi :</label><br />
+        <select id="project-origin" name="project-origin" onchange="updateProjectOrigin()">
+          <option value="turkish" selected>Türk</option>
+          <option value="foreign">Yabancı</option>
+        </select>
+      </div>
+    </div>
+  </div>
+  <div id="checklist-body">
+    <div class="all-ships">
+      <h4>Ortak istenen Evrak</h4>
+      <ul>
+        <li>
+          <input name="application-form" type="checkbox" />
+          <label for="application-form">
+            Gemi veya Su Aracı inşa Başvuru Belgesi (GSVP üzerinden çıktı
+            alınacak)</label>
+        </li>
+        <li>
+          <input name="tax-decont" type="checkbox" />
+          <label for="tax-decont"> İnşa izni Belgesi ücreti dekontu</label>
+        </li>
+        <li>
+          <input name="groston-calculation" type="checkbox" />
+          <label for="groston-calculation" data-talimat="19.03.2021-12933">
+            Grostonaj hesabı:
+            <span class="project-origin-dependant" data-project-origin="turkish">
+              (Proje Müh. Türk olduğunda proje müh. onaylı)</span>
+            <span class="project-origin-dependant" data-project-origin="foreign">
+              (Proje Müh. yabancı olduğunda;
+              <span class="flag-turk ce-true ce-false toBeFiltered">
+                Türk Bayraklılar için klas; klas yoksa kontrol mühendisi imzalı)</span>
+              <span class="flag-foreign ce-true ce-false toBeFiltered">
+                Yabancı bayraklılar için klas; klas yoksa tesis imzalı)</span>
+            </span>
+
+          </label>
+        </li>
+      </ul>
+    </div>
+    <div class="ce-false flag-foreign toBeFiltered">
+      <h4>Yabancı Bayraklı Gemilerden istenen Belgeler:</h4>
+      <ol>
+        <li>
+          <input name="rule-decleration" type="checkbox" />
+          <label for="rule-decleration">
+            Sözleşmesinde gemi veya su aracının ilgili bayrak devleti
+            kurallarına göre inşa edileceğine dair özel bir hüküm yok ise
+            yetkilendirilmiş veya tanınmış kuruluşun geminin inşasının kendi
+            kontrolü altında yapılacağına dair yazısı,
+          </label>
+        </li>
+        <li>
+          <input name="decleration-of-export" type="checkbox" />
+          <label for="decleration-of-export">
+            Gemi veya su aracının ihraç amaçlı olduğunu gösteren belge
+            (sözleşme veya yazılı beyan),
+          </label>
+        </li>
+        <li>
+          <input name="plan-ga" type="checkbox" />
+          <label for="plan-ga">
+            Genel Yerleşim Planı
+            <span class="klas-true klas-dependant"> (klas bilgi alındı kaşesi vurulmuş)</span>
+          </label>
+        </li>
+      </ol>
+    </div>
+
+    <div class="ce-false flag-turk toBeFiltered">
+      <h4>Türk Bayraklı Gemilerden İstenen Belgeler:</h4>
+
+
+      <h4>Evraklar:</h4>
+      <ul>
+        <li class="klas-true klas-dependant">
+          <input name="class-decleration" type="checkbox" />
+          <label for="class-decleration">
+            Klaslı inşası zorunlu olan gemi ve su araçlarından yetkilendirilmiş klas kuruluşunun geminin
+            inşasının kendi kontrolü altında yapılacağına dair yazısı,
+          </label>
+        </li>
+        <li class="project-origin-dependant" data-project-origin="foreign">
+          <input name="project-decleration" type="checkbox" />
+          <label for="project-decleration">
+            Yabancı menşeli proje ve belgeleri sunan kişi, proje müellifinden
+            projenin kullanılması konusunda gerekli izinleri aldığını belirten
+            taahhütnameyi Liman Başkanlığına sunar.
+          </label>
+        </li>
+
+
+        <li class="klas-false klas-dependant">
+          <input name="contract-control-engineer" type="checkbox" />
+          <label for="contract-control-engineer">
+            Klaslı inşası zorunlu olmayan gemi ve su araçlarından Kontrol Mühendisiyle yapılan sözleşme,
+          </label>
+        </li>
+        <li class="klas-false klas-dependant">
+          <input name="design-engineer-decleration" type="checkbox" />
+          <label for="design-engineer-decleration">
+            Klaslı inşası zorunlu olmayan gemi ve su araçlarından proje mühendisinin plan, proje ve hesapların hangi
+            klas kuruluşu kuralına göre yapıldığını gösteren beyanı,
+          </label>
+        </li>
+        <li class="klas-false klas-dependant">
+          <input name="contract-shipbuilding" type="checkbox" />
+          <label for="contract-shipbuilding">
+            Gemi sahibi veya temsilcisi ile tesis sahibi veya temsilcisi arasında yapılan sözleşme,
+          </label>
+        </li>
+      </ul>
+      <ol>
+        <h4>Plan ve Projeler:</h4>
+        <li>
+          <input name="plan-ga" type="checkbox" />
+          <label for="plan-ga">
+            Genel Yerleşim Planı
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant">
+              (GMO Onayı ve Klas bilgi alındı kaşesi)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-endaze" type="checkbox" />
+          <label for="plan-endaze">
+            Endaze (Form) Planı
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant">
+              (Klas bilgi alındı kaşesi)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-longSec" type="checkbox" />
+          <label for="plan-longSec">
+            Boy Kesit ve Güverte Planı
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-midSec" type="checkbox" />
+          <label for="plan-midSec">
+            Orta Kesit ve Perde Planı
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="calc-scantling" type="checkbox" />
+          <label for="calc-scantling">
+            Boyutlandırma Hesabı
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-shellPlate" type="checkbox" />
+          <label for="plan-shellPlate">
+            çelik veya aluminyum gövdeli tekneler için Dış Kaplama Planı
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="calc-transStrength" type="checkbox" />
+          <label for="calc-transStrength">
+            Enine Mukavemet Modeli Hesabı
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="calc-longStrength" type="checkbox" />
+          <label for="calc-longStrength">
+            Boyuna Mukavemet Hesabı
+            <span class="klas-false klas-dependant"> (GMO Onayı gerekmez)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-accomodation" type="checkbox" />
+          <label for="plan-accomodationh">
+            Yaşam mahalleri yerleşim planı (500 groston ve üzeri uluslararası sefer yapacak gemi ve su araçlarından )
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-aircondition" type="checkbox" />
+          <label for="plan-aircondition">
+            İklimlendirme ve havalandırma planı (500 groston ve üzeri uluslararası sefer yapacak gemi ve su
+            araçlarından
+            )
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-engineroom" type="checkbox" />
+          <label for="plan-engineroom">
+            Makine dairesi yerleşim planı (Tam boyu 24 metre üzerindeki tüm gemilerden )
+            <span class="klas-false klas-dependant"> (GMO Onayı gerekmez)</span>
+            <span class="klas-true klas-dependant"> (Klas bilgi alındı kaşesi)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-capacity" type="checkbox" />
+          <label for="plan-capacity">
+            Kapasite planı (Tam boyu 24 metre üzerindeki tüm gemive su araçlarından )
+            <span class="klas-false klas-dependant"> (GMO Onayı gerekmez)</span>
+            <span class="klas-true klas-dependant"> (Klas bilgi alındı kaşesi)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-isolation" type="checkbox" />
+          <label for="plan-isolation">
+            İzolasyon Planı (Tam boyu 24 metre üzerindeki tüm gemive su araçlarından )
+            <span class="klas-false klas-dependant"> (GMO Onayı gerekmez)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-firesafety" type="checkbox" />
+          <label for="plan-firesafety">
+            Yangın ve emniyet planı (Tam boyu 24 metre üzerindeki tüm gemive su araçlarından )
+            <span class="klas-false klas-dependant"> (GMO Onayı gerekmez)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="plan-freeboard" type="checkbox" />
+          <label for="plan-freeboard">
+            Fribord planı (Tam boyu 24 metre üzerindeki tüm gemive su araçlarından )
+            <span class="klas-false klas-dependant"> (GMO Onayı gerekmez)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="calc-freeboard" type="checkbox" />
+          <label for="calc-freeboard">
+            Fribord hesabı (Fribord boyu 24 metre ve üzerindeki tüm gemi ve su araçlarından )
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (GMO Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="book-stability" type="checkbox" />
+          <label for="book-stability">
+            Stabilite bukleti (Fribord boyu 24 metre ve üzerindeki tüm gemilerden ve boyuna bakılmaksızın 150 kişiden
+            fazla yolcu taşıyan gemi ve su araçlarından )
+            <span class="klas-false klas-dependant"> (GMO Onayı)</span>
+            <span class="klas-true klas-dependant"> (Klas Onayı)</span>
+          </label>
+        </li>
+        <li>
+          <input name="calc-stability" type="checkbox" />
+          <label for="calc-stability">
+            Fribord hesabı (Fribord boyu 24 metre ve üzerindeki tüm gemi ve su araçlarından )
+            <span class="klas-false klas-dependant"> (GMO Onayı gerekmez)
+              <span class="klas-true klas-dependant"> (Klas Onayı gerekmez)</span>
+          </label>
+        </li>
+
+      </ol>
+      <p class="footnote">Not: Gemi ve su araçlarından, yukarıdaki numaralı plan ve projelerden
+        <span class="klas-false klas-dependant"> klassız inşa edilenler için 1, 2, 3, 4, 5, 6 ve 7 numarada
+          belirtilen</span>
+        <span class="klas-true klas-dependant">klaslı inşa edilenler için 1 numarada belirtilen</span>
+        plan, proje ve hesaplar inşa izin başvurusunda sunulmalıdır,
+        diğer plan, proje ve hesaplar inşa takibinde veya inşa bitiminde sunulur.
+      </p>
+      <p class="footnote">Not: Balık avlama ve balıkçılık yardımcı gemilerinden tam boyu 24 ila 50 metre arasında
+        olanlar
+        için
+        aşağıdaki çizelgede alınacak plan ve projelerden ilk 10’u klaslı gemilerden istendiği şekilde,
+        diğerleri klassız gemilerden istendiği şekilde İdareye teslim edilir.</p>
+    </div>
+
+    <div class="ce-true flag-foreign flag-turk toBeFiltered">
+      <h4>CE'li inşa edilecek gemilerden:</h4>
+      <ul>
+        <li id="deneme">
+          <input name="ce-decleration" type="checkbox" />
+          <label for="ce-decleration">
+            Gemi temsilcisi tarafından geminin CE'li olarak inşa edileceğine
+            dair yazılı beyan, istenilecektir.</label>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div id="report">
+    <h4 id="info-header"></h4>
+    <h4>Eksik evrak listesi:</h4>
+    <div id="absent-papers" onclick="reportList()">
+
+    </div>
+    <div id="expert-notes" contenteditable="true">
+      <h4>Uzman notu:</h4>
+    </div>
+  </div>
+
+  <button class="btn-output" onclick="printReport()">Raporu Bastır</button>
+  <button class="btn-print-empty" onclick="printRawReport()">Elle doldur</button>
+
+  <script>
+    //close out of scope divisions according to flag and CE state selections
+    let klasSelected = false;
+    let flagSelected = false;
+    let ceSelected = false;
+    let projectOriginSelected = false;
+    let applicationDate = "..............";
+    let applicationId = ".........";
+    let onAfterPrintFuncs = {};
+    let tempObjects = {};
+
+    let checklistBody = document.getElementById("checklist-body");
+    checklistBody.style.display = "none";
+
+    const initPage = () => {
+      updateProjectOrigin();
+    }
+
+    const updateApplicationInfo = () => {
+      applicationDate = document.getElementById("application-date").value.trim();
+      applicationId = document.getElementById("application-number").value.trim();
+      if (applicationDate.trim() == "") applicationDate = "..............";
+      if (applicationId.trim() == "") applicationId = ".........";
+      document.getElementById("appInfoToPrint").innerText = `${applicationDate} Tarih ve ${applicationId} Sayılı İnşa izin Başvurusu`;
+    }
+
+    const ceUpdated = () => {
+      ceSelected = true;
+      updateList();
+    }
+
+    const flagUpdated = () => {
+      flagSelected = true;
+      updateList();
+    }
+
+    const updateProjectOrigin = () => {
+      projectOriginSelected = true;
+      let originSelected = event.target.value;
+      console.log(originSelected);
+
+      let elems = document.getElementsByClassName("project-origin-dependant");
+      let origin = "";
+
+      for (let elem of elems) {
+
+        origin = elem.getAttribute("data-project-origin");
+
+        if (origin == originSelected) {
+          elem.style.display = elem.tagName == "SPAN" ? "inline" : "block";
+        } else {
+          elem.style.display = "none";
+        }
+      }
+
+    }
+
+    const updateList = () => {
+      let elems = document.getElementsByClassName("toBeFiltered");
+      let flagState = document.getElementById("flag").value;
+      let ceState = document.getElementById("ce-state").value;
+      console.log(flagState);
+      console.log(ceState);
+      for (let elem of elems) {
+        if (
+          elem.classList.contains(flagState) &&
+          elem.classList.contains(ceState)
+        ) {
+          elem.style.display = elem.tagName == "SPAN" ? "inline" : "block";
+        } else {
+          elem.style.display = "none";
+        }
+      }
+      showChecklistBody();
+    };
+
+    const updateKlas = () => {
+
+      klasSelected = true;
+      let elems = document.getElementsByClassName("klas-dependant");
+      let klasState = document.getElementById("klas").value;
+      console.log(klasState);
+
+      for (let elem of elems) {
+        if (elem.classList.contains(klasState)) {
+          elem.style.display = elem.tagName == "SPAN" ? "inline" : "block";
+        } else {
+          elem.style.display = "none";
+        }
+      }
+      showChecklistBody();
+    };
+
+    const showChecklistBody = () => {
+
+      if (klasSelected && flagSelected && ceSelected) {
+        checklistBody.style.display = "block";
+      }
+    };
+
+    const printReport = () => {
+      if (!(klasSelected && flagSelected && ceSelected)) {
+
+        window.alert("Önce seçiminizi yapınız");
+        return;
+      }
+
+      insertAppInfo();
+      reportList();
+      window.print();
+    }
+
+    const insertAppInfo = () => {
+
+      document.getElementById("info-header").innerText = `${applicationDate} Tarih ve ${applicationId} Sayılı İnşa izin Başvurusuna İlişkin Eksik Evrak Tutanağı`;
+      document.getElementById("appInfoToPrint").innerText = `${applicationDate} Tarih ve ${applicationId} Sayılı İnşa izin Başvurusu`;
+    }
+
+    const reportList = () => {
+
+      if (!(klasSelected && flagSelected && ceSelected)) {
+
+        window.alert("Önce seçiminizi yapınız");
+        return;
+      }
+      insertAppInfo();
+      let displayedListDivs = document.querySelectorAll("#checklist-body > div");
+      let absentList = "";
+
+      if (displayedListDivs.length > 0) {
+
+        for (let div of displayedListDivs) {
+
+          if (div.style.display == "none") { continue; }
+
+          let elems = div.querySelectorAll("li");
+
+          for (elem of elems) {
+
+            if (elem.style.display != "none" && elem.querySelector("input").checked == false) {
+
+              absentList += "-" + elem.innerText + "\n";
+
+            } else {
+
+              continue;
+            }
+
+          }
+
+        }
+        let outputDiv = document.getElementById("absent-papers");
+
+        if (absentList != "") {
+
+          outputDiv.innerText = absentList;
+
+        } else {
+
+          outputDiv.innerText = "gerekli evraklar tamam";
+        }
+
+
+      } else {
+        window.alert("Kategoriler henüz seçilmedi!");
+        return;
+      }
+
+    }
+
+    const printRawReport = () => {
+
+      if (!(klasSelected && flagSelected && ceSelected)) {
+
+        window.alert("Önce seçiminizi yapınız");
+        return;
+      }
+
+      document.getElementById("absent-papers").style.minHeight = "8em";
+      document.getElementById("expert-notes").style.minHeight = "7em";
+      document.getElementById("absent-papers").innerText = "";
+      tempObjects.emptiedCheckboxes = emptyCheckboxesToPrint();
+      onAfterPrintFuncs.restoreEmptiedCheckboxes = restoreEmptiedCheckboxes;
+      window.print();
+
+    }
+
+    const emptyCheckboxesToPrint = () => {
+
+      let elems = document.querySelectorAll("input[type=checkbox]");
+      let emptiedCheckboxes = [];
+
+      for (let elem of elems) {
+
+        if (elem.checked == true) {
+          elem.checked = false;
+          emptiedCheckboxes.push(elem); 
+        }
+
+      }
+      return emptiedCheckboxes;
+    }
+
+    const restoreEmptiedCheckboxes = () => {
+
+      for (let elem of tempObjects.emptiedCheckboxes) {
+        elem.checked = true;
+      }
+
+      tempObjects.emptiedCheckboxes = [];
+    }
+
+    window.onafterprint = () => {
+
+      document.getElementById("absent-papers").style.minHeight = "2em";
+      document.getElementById("expert-notes").style.minHeight = "5em";
+
+      for(let func in onAfterPrintFuncs){
+        onAfterPrintFuncs[func]();
+      }
+    }
+
+
+
+
+  </script>
+</body>
+
+</html>
