@@ -30,6 +30,6 @@ Suppose that you apply for a new passport or anything that has some prerequistes
 
 A dynamic checklist would ease the job for you.
 
-Or,suppose that you are a civil officer who is supposed to receive applications of such kind. And think that thare may be 2^5 possible situation, maybe more. Then, having this kind of dynamic checklist would do the required logical processing instead of you.
+Or,suppose that you are a civil officer who is supposed to receive applications of such kind. And think that thare may be 2^5 possible situation, maybe more. Then, having this kind of dynamic checklist would perform the required logical processing instead of you.
 
 
