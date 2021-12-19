@@ -7,7 +7,7 @@ Filtering system has scope based evaluation methods.
  "if length of ship is greater than ....."
  "if type of ship is ....."
 
-#* Features
+## Features
 
  - Several kind of inputs can be defined,
  - Logical expressions can be used to filter the list
