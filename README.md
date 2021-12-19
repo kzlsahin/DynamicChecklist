@@ -8,7 +8,7 @@ Filtering system is based on logical expressions like:
 
  "if type of ship is ....."
 
-The reason is derived from legal texts. In legal texts, items includes conditional expressions which defines the scope of the expression. 
+The reason is derived from legal texts. In legal texts, items include conditional expressions which define the scope of the item. 
 The Dynamic Checklist also uses the same approach; predefined features which the items are dependent are implemented as input components.
 Each item has dependency information and logical expressions which defines the conditions of the dependencies.
 
