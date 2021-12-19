@@ -1,5 +1,5 @@
 # Dynamic Checklist
-Live demo: https://kzlsahin.online/list.A.2.1
+Live demo: https://kzlsahin.online/list.A.2.1.html
 
 A checklist page with dynamic filtering system behind according to inputs.
 Filtering system has scope based evaluation methods.
