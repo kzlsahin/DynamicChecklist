@@ -8,6 +8,11 @@ Filtering system is based on logical expressions like:
 
  "if type of ship is ....."
 
+## How it works
+
+Each item can be bind to a input feature with a logical expression. The filter checks logical bindings and expressions of each item.
+If a set of logical expressions of an item does not return true (all expressions should return true) then, the item gets removed from the list.
+
 ## Features
 
  - Several kind of inputs can be defined,
