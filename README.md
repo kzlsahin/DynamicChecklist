@@ -1,12 +1,16 @@
 # Dynamic Checklist
 Live demo: https://kzlsahin.online/list.A.2.1.html
 
-A checklist page with dynamic filtering system behind according to inputs.
+A checklist page with dynamic filtering system which is based on conditional dependencies of items to a set of features.
 Filtering system is based on logical expressions like:
 
  "if length of ship is greater than ....."
 
  "if type of ship is ....."
+
+The reason is derived from legal texts. In legal texts, items includes conditional expressions which defines the scope of the expression. 
+The Dynamic Checklist also uses the same approach; predefined features which the items are dependent are implemented as input components.
+Each item has dependency information and logical expressions which defines the conditions of the dependencies.
 
 ## How it works
 
