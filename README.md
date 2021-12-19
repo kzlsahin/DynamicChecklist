@@ -2,16 +2,16 @@
 Live demo: https://kzlsahin.online/list.A.2.1.html
 
 A checklist page with dynamic filtering system behind according to inputs.
-Filtering system has scope based evaluation methods.
+Filtering system is based on logical expressions like:
 
- for example:
  "if length of ship is greater than ....."
+
  "if type of ship is ....."
 
 ## Features
 
  - Several kind of inputs can be defined,
- - Logical expressions can be used to filter the list
+ - Logical expressions can be used to filter the list (==, <=, >=, !=, >>, <<)
  - Reporting of the unchecked items
  - PDF reporting
  - Optionally print the list with all items unchecked and empty reporting field.
