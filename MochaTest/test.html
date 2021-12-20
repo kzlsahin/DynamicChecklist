@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!-- add mocha css, to show results -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mocha/3.2.0/mocha.css">
+  <!-- add mocha framework code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/mocha/3.2.0/mocha.js"></script>
+  <script>
+    mocha.setup('bdd'); // minimal setup
+  </script>
+  <!-- add chai -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/chai/3.5.0/chai.js"></script>
+  <script>
+    // chai has a lot of stuff, let's make assert global
+    let assert = chai.assert;
+  </script>
+</head>
+
+<body>
+
+  <script>
+
+    function logEval(op, val, org) {
+      return regLogicOperations.evaluate(op, val, org);
+    }
+
+
+const regLogicOperations = {
+
+    evaluate: (op, val, inp) => {
+	val = isNaN(val) ? val : Number(val);
+	inp = isNaN(inp) ? inp : Number(inp);
+      switch (op) {
+        case '<':
+          return regLogicOperations.lessThen(val, inp);
+          break;
+        case '<=':
+          return regLogicOperations.lessThenEqualTo(val, inp);
+          break;
+        case '>':
+          return regLogicOperations.moreThen(val, inp);
+          break;
+        case '>=':
+          return regLogicOperations.moreThenEqualTo(val, inp);
+          break;
+        case '=':
+          return regLogicOperations.equalTo(val, inp);
+          break;
+	case '!=':
+          return regLogicOperations.notEqualTo(val, inp);
+          break;
+      }
+    },
+
+    lessThen: (val, inp) => {
+      return inp < val;
+    },
+
+    lessThenEqualTo: (val, inp) => {
+      return inp <= val;
+    },
+
+    moreThen: (val, inp) => {
+      return inp > val;
+    },
+
+    moreThenEqualTo: (val, inp) => {
+      return inp >= val;
+    },
+
+    equalTo: (val, inp) => {
+      return inp == val;
+    },
+	notEqualTo: (val, inp) => {
+      return inp != val;
+    },
+
+  }
+
+
+  </script>
+
+  <!-- the script with tests (describe, it...) -->
+  <script src="test.js"></script>
+
+  <!-- the element with id="mocha" will contain test results -->
+  <div id="mocha"></div>
+
+  <!-- run tests! -->
+  <script>
+    mocha.run();
+  </script>
+</body>
+
+</html>
