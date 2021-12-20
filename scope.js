@@ -147,6 +147,8 @@ const evalScopeString = (elem, inputId) => {
 const regLogicOperations = {
 
     evaluate: (op, val, inp) => {
+	val = isNaN(val) ? val : Number(val);
+	inp = isNaN(inp) ? inp : Number(inp);
       switch (op) {
         case '<':
           return regLogicOperations.lessThen(val, inp);
@@ -162,6 +164,9 @@ const regLogicOperations = {
           break;
         case '=':
           return regLogicOperations.equalTo(val, inp);
+          break;
+	case '!=':
+          return regLogicOperations.notEqualTo(val, inp);
           break;
       }
     },
@@ -185,10 +190,13 @@ const regLogicOperations = {
     equalTo: (val, inp) => {
       return inp == val;
     },
+	notEqualTo: (val, inp) => {
+      return inp != val;
+    },
 
   }
 
 
-
+   
 
    
