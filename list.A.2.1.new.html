@@ -228,11 +228,14 @@
       </div>
       <div class="sf-select">
         <span for="ship-L">Tam Boyu: </span>
-        <input id="shipl" class="sf-inp inlineInput ship-features" type="text" name="ship-L" value="all"
+        <input id="shipl" class="sf-inp inlineInput ship-features" type="number" name="ship-L" value=""
           >
         <span for="ship-groston">Groston: </span>
-        <input id="shipgroston" class="sf-inp inlineInput ship-features" type="text" name="ship-groston" value="all"
+        <input id="shipgroston" class="sf-inp inlineInput ship-features" type="number" name="ship-groston" value=""
           >
+          <span for="ship-passenger">Yolcu sayısı: </span>
+          <input id="shippassenger" class="sf-inp inlineInput ship-features" type="number" name="ship-passenger" value=""
+            >
       </div>
     </div>
   <div id="checklist-body">
@@ -309,8 +312,10 @@
     <div class="cestate-dependant flag-dependant" data-cestate="= ce-false" data-flag="= flag-turk">
       <h4>Türk Bayraklı Gemilerden İstenen Belgeler:</h4>
 
+
+
       <ul>
-      <h4>Evraklar:</h4>
+        <h4>Evraklar:</h4>
         <li class="klas-dependant" data-klas="= klas-true">
           <input name="class-decleration" type="checkbox" />
           <label for="class-decleration">
@@ -486,16 +491,15 @@
           <input name="book-stability" type="checkbox" />
           <label for="book-stability">
             17) Stabilite bukleti (Fribord boyu 24 metre ve üzerindeki tüm gemilerden ve boyuna bakılmaksızın 150
-            kişiden
-            fazla yolcu taşıyan gemi ve su araçlarından )
+            kişiden fazla yolcu taşıyan gemi ve su araçlarından )
             <span class="klas-dependant" data-klas="= klas-false"> (GMO Onayı)</span>
             <span class="klas-dependant" data-klas="= klas-true"> (Klas Onayı)</span>
           </label>
         </li>
-        <li data-shipl="> 24" class="shipl-dependant">
+        <li>
           <input name="calc-stability" type="checkbox" />
           <label for="calc-stability">
-            18) Fribord hesabı (Fribord boyu 24 metre ve üzerindeki tüm gemi ve su araçlarından )
+            18) Denge hesabı (Stabilite Bukleti istenmeyen gemilerden (İdarenin denge hesabı kurallarına uygun)
             <span class="klas-dependant" data-klas="= klas-false"> (GMO Onayı gerekmez)
               <span class="klas-dependant" data-klas="= klas-true"> (Klas Onayı gerekmez)</span>
           </label>
