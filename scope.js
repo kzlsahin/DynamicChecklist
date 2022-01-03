@@ -134,7 +134,7 @@ const evalScopeString = (elem, inputId) => {
             console.warn("element name : " + elem?.name);
             return true;
         }
-    if(scopeGlobals.inputState[inputId] == "all"){
+    if(scopeGlobals.inputState[inputId] == ""){
             return true;
         }
     [operator, val] = elem?.dataset[inputId]?.split(" ");
