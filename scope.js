@@ -119,7 +119,7 @@ const filterItems = () => {
 const checkForRequiredInputs = () => {
     
     let isAllSelected = true;
-    for(let inputId in scopeGlobals.IdsOfRequiredInputs){
+    for(let inputId of scopeGlobals.IdsOfRequiredInputs){
         let isInputSet = scopeGlobals.inputState[inputId] != '';
         isAllSelected = isAllSelected && isInputSet;
     }
